@@ -5,6 +5,7 @@ import Footer from './Footer'
 import BlogForm from './BlogForm'
 import Post from './Post'
 
+
 class App extends Component {
 	//this is our state object
 	state = {
@@ -48,13 +49,23 @@ class App extends Component {
 	}
 
 	handleDelete = id => {
-		// first we copy the state and modify it
-		let newState = this.state.posts.filter(
-			item => this.state.posts[id] !== item
-		)
-		// set the state
-		this.setState({
-			posts: newState
+
+		const url = `http://localhost:8000/api/post/${id}`
+		const options = {
+			method: 'DELETE',
+			headers : {
+				"content-type" : "application/json"
+			},
+			body: JSON.stringify({id})
+		}
+
+		deletePost(url, options).then(()=>{
+			const newStateArray = this.state.posts.filter(e =>{
+				return e._id !== id
+			} )
+			this.setState({
+				posts: [...newStateArray]
+			})
 		})
 	}
 
@@ -102,4 +113,10 @@ async function createPost (url, options) {
 	const newPost = await fetch(url, options)
 	const postJSON = await newPost.json()
 	return await postJSON
+}
+
+async function deletePost(url, options){
+	const oldPost = await fetch(url, options)
+	const oldJSON = await oldPost.json()
+	return await oldJSON
 }
