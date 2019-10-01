@@ -4,34 +4,46 @@ import Nav from './Nav'
 import Footer from './Footer'
 import BlogForm from './BlogForm'
 import Post from './Post'
-import { async } from 'q'
 
 class App extends Component {
 	//this is our state object
 	state = {
-		isShowing: true,
+		isShowing: false,
 		posts: []
 	}
 	// we will define all event logic here
 
 	componentDidMount = async () =>{
-		const results = await fetch('http://localhost:8000/api/posts').then(results=> results.json())
+		const results = await fetch('http://localhost:8000/api/posts')
+		const resultsJSON = await results.json()
 
 		this.setState({
-			posts: [...results]
+			posts: [...resultsJSON]
 		})
 	}
-	handleShowForm = event => {
+
+	handleShowForm = () => {
 		this.setState({
 			isShowing: !this.state.isShowing
 		})
 	}
 
 	//update state here and pass this method down to another component
-	handleAddPost = ({ title, user, content }) => {
-		console.log('app.js line 33', { title, user, content })
-		this.setState({
-			posts: [{ title, user, content }, ...this.state.posts] // we spread the object and the state
+	handleAddPost = ({ title, post, author }) => {
+		const url = 'http://localhost:8000/api/post'
+		const options = {
+			method: 'POST',
+            headers : {
+                "content-type" : "application/json"
+            },
+            body: JSON.stringify({title, post, author})
+		}
+
+		createPost(url, options).then(results=>{
+			this.setState({
+			posts: [...this.state.posts, results],
+			isShowing: false
+			})
 		})
 	}
 
@@ -51,15 +63,15 @@ class App extends Component {
 		// compose components down here and later
 		// TODO : extract these to seperate components
 		const title = <h1>Confetti Blog</h1>
-		const composedPosts = this.state.posts.map((item, index) => {
+		const composedPosts = this.state.posts.map(item => {
 			return (
 				<Post
-					key={index}
+					key={item._id}
 					title={item.title}
 					user={item.author}
 					content={item.post}
 					handleDelete={this.handleDelete}
-					id={index}
+					id={item._id}
 				/>
 			)
 		})
@@ -67,7 +79,7 @@ class App extends Component {
 			<div className="App container">
 				<Nav content={title} />
 				
-				{!this.state.isShowing ? (
+				{this.state.isShowing ? (
 					<BlogForm
 						handleAddPost={this.handleAddPost}
 						handleToggle={this.handleShowForm}
@@ -83,3 +95,11 @@ class App extends Component {
 }
 
 export default App
+
+// put all fetch calls here and then extract them to a services module after they work
+
+async function createPost (url, options) {
+	const newPost = await fetch(url, options)
+	const postJSON = await newPost.json()
+	return await postJSON
+}

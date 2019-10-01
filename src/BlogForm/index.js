@@ -5,8 +5,8 @@ import PropTypes from 'prop-types'
 class BlogForm extends Component {
 	state = {
 		title: '',
-		content: '',
-		user: ''
+		post: '',
+		author: ''
 	}
 
 	handleOnChange = event => {
@@ -21,8 +21,8 @@ class BlogForm extends Component {
 		this.props.handleAddPost({...this.state}) // this is what actually set the state
 		this.setState({
 			tite:'',
-			content:'',
-			user:''
+			post:'',
+			author:''
 		})
 	}
 
@@ -47,7 +47,7 @@ class BlogForm extends Component {
 						<input
 							autoComplete="off"
 							type="text"
-							name="user"
+							name="author"
 							onChange={this.handleOnChange}
 							value={this.state.user}
 						/>
@@ -57,7 +57,7 @@ class BlogForm extends Component {
 				<textarea
 					autoComplete="off"
 					type="text"
-					name="content"
+					name="post"
 					onChange={this.handleOnChange}
 					value={this.state.content}
 				/>
