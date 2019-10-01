@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Post = ({ title, content, user, handleDelete, id  }) => {
+const Post = ({ title, content, user, handleDelete, id, edit, isEditing, idx  }) => {
+
+	const button = isEditing ? null : <button onClick={()=> edit(idx)}>Edit</button>
+
 	return (
 		<li key={id} className="post">
 			<h3 className="postTitles">{title}</h3>
 			<p>{content}</p>
 			<h6>{user}</h6>
 			<button onClick={() => handleDelete(id)}>Delete</button>
+			{button}
 		</li>
 	)
 }

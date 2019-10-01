@@ -4,13 +4,16 @@ import Nav from './Nav'
 import Footer from './Footer'
 import BlogForm from './BlogForm'
 import Post from './Post'
+import {Edit} from './Edit/Edit'
 
 
 class App extends Component {
 	//this is our state object
 	state = {
 		isShowing: false,
-		posts: []
+		posts: [],
+		isEditing: false,
+		edit: ''
 	}
 	// we will define all event logic here
 
@@ -31,9 +34,16 @@ class App extends Component {
 		})
 	}
 
+	handleShowEdit = (id) => {
+		this.setState({
+			isEditing: !this.state.isEditing,
+			edit: id
+		})
+	}
+
 	//update state here and pass this method down to another component
 	handleAddPost = ({ title, post, author }) => {
-		
+
 		const url = 'http://localhost:8000/api/post'
 		const options = {
 			method: 'POST',
@@ -77,15 +87,18 @@ class App extends Component {
 		// compose components down here and later
 		// TODO : extract these to seperate components
 		const title = <h1>Confetti Blog</h1>
-		const composedPosts = this.state.posts.map(item => {
+		const composedPosts = this.state.posts.map((item, idx) => {
 			return (
 				<Post
 					key={item._id}
+					idx={idx}
 					title={item.title}
 					user={item.author}
 					content={item.post}
 					handleDelete={this.handleDelete}
 					id={item._id}
+					edit={this.handleShowEdit}
+					isEditing={this.state.isEditing}
 				/>
 			)
 		})
@@ -100,6 +113,14 @@ class App extends Component {
 					/>
 				) : (
 					<button onClick={this.handleShowForm}>Add Post</button>
+				)}
+				{this.state.isEditing ? (
+					<Edit 
+						post={this.state.posts[this.state.edit]}
+						handleShowEdit={this.handleShowEdit}
+					/>
+				) : (
+					null
 				)}
 				<ul>{composedPosts}</ul>
 				<Footer />
