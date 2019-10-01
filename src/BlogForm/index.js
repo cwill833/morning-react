@@ -19,6 +19,11 @@ class BlogForm extends Component {
 		event.preventDefault()
 		console.log('line 20 in BlogPost/index : ', event)
 		this.props.handleAddPost({...this.state}) // this is what actually set the state
+		this.setState({
+			tite:'',
+			content:'',
+			user:''
+		})
 	}
 
 	render() {
@@ -30,6 +35,7 @@ class BlogForm extends Component {
 						{' '}
 						<label>Title</label>
 						<input
+							autoComplete="off"
 							type="text"
 							name="title"
 							onChange={this.handleOnChange}
@@ -39,6 +45,7 @@ class BlogForm extends Component {
 					<div>
 						<label>Author</label>
 						<input
+							autoComplete="off"
 							type="text"
 							name="user"
 							onChange={this.handleOnChange}
@@ -48,6 +55,7 @@ class BlogForm extends Component {
 				</div>
 				<label>New Post</label>
 				<textarea
+					autoComplete="off"
 					type="text"
 					name="content"
 					onChange={this.handleOnChange}

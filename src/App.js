@@ -67,7 +67,8 @@ class App extends Component {
 		})
 		return (
 			<div className="App container">
-				<Nav content="NAV" />
+				<Nav content={title} />
+				
 				{!this.state.isShowing ? (
 					<BlogForm
 						handleAddPost={this.handleAddPost}
