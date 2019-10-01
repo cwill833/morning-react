@@ -15,12 +15,14 @@ class App extends Component {
 	// we will define all event logic here
 
 	componentDidMount = async () =>{
-		const results = await fetch('http://localhost:8000/api/posts')
-		const resultsJSON = await results.json()
+		const url = 'http://localhost:8000/api/posts'
+		getAll(url).then(results=>{
+			this.setState({
+				posts: [...results]
+			})
 
-		this.setState({
-			posts: [...resultsJSON]
 		})
+
 	}
 
 	handleShowForm = () => {
@@ -31,6 +33,7 @@ class App extends Component {
 
 	//update state here and pass this method down to another component
 	handleAddPost = ({ title, post, author }) => {
+		
 		const url = 'http://localhost:8000/api/post'
 		const options = {
 			method: 'POST',
@@ -40,7 +43,7 @@ class App extends Component {
             body: JSON.stringify({title, post, author})
 		}
 
-		createPost(url, options).then(results=>{
+		handleFetch(url, options).then(results=>{
 			this.setState({
 			posts: [...this.state.posts, results],
 			isShowing: false
@@ -59,7 +62,7 @@ class App extends Component {
 			body: JSON.stringify({id})
 		}
 
-		deletePost(url, options).then(()=>{
+		handleFetch(url, options).then(()=>{
 			const newStateArray = this.state.posts.filter(e =>{
 				return e._id !== id
 			} )
@@ -109,14 +112,15 @@ export default App
 
 // put all fetch calls here and then extract them to a services module after they work
 
-async function createPost (url, options) {
-	const newPost = await fetch(url, options)
-	const postJSON = await newPost.json()
-	return await postJSON
+
+async function handleFetch(url, options){
+	const stream = await fetch(url, options)
+	const json= await stream.json()
+	return await json
 }
 
-async function deletePost(url, options){
-	const oldPost = await fetch(url, options)
-	const oldJSON = await oldPost.json()
-	return await oldJSON
+async function getAll(url){
+	const results = await fetch(url)
+	const resultsJSON = await results.json()
+	return await resultsJSON
 }
