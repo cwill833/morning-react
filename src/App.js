@@ -18,8 +18,8 @@ class App extends Component {
 	// we will define all event logic here
 
 	componentDidMount = async () =>{
-		const url = 'http://localhost:8000/api/posts'
-		getAll(url).then(results=>{
+		 
+		getAll().then(results=>{
 			this.setState({
 				posts: [...results]
 			})
@@ -34,7 +34,7 @@ class App extends Component {
 		})
 	}
 
-	handleShowEdit = (id) => {
+	handleShowEdit = id => {
 		this.setState({
 			isEditing: !this.state.isEditing,
 			edit: id
@@ -82,6 +82,27 @@ class App extends Component {
 		})
 	}
 
+	handleUpdate = (id, body) => {
+		console.log(id, body)
+		const url = `http://localhost:8000/api/post/edit/${id}`
+		const options = {
+			method: 'PUT',
+			headers : {
+				"content-type" : "application/json"
+			},
+			body: JSON.stringify(body)
+		}
+
+		handleFetch(url, options).then(()=>{
+			getAll().then(results=>{
+				this.setState({
+					posts: [...results],
+					isEditing: false
+				})
+			})
+		})
+	}
+
 	// this is our render which handles our view
 	render() {
 		// compose components down here and later
@@ -118,6 +139,7 @@ class App extends Component {
 					<Edit 
 						post={this.state.posts[this.state.edit]}
 						handleShowEdit={this.handleShowEdit}
+						handleUpdate={this.handleUpdate}
 					/>
 				) : (
 					null
@@ -140,8 +162,8 @@ async function handleFetch(url, options){
 	return await json
 }
 
-async function getAll(url){
-	const results = await fetch(url)
+async function getAll(){
+	const results = await fetch('http://localhost:8000/api/posts')
 	const resultsJSON = await results.json()
 	return await resultsJSON
 }

@@ -10,7 +10,7 @@ export class Edit extends Component {
 		author: ''
     }
 
-    componentWillMount = () => {
+    componentDidMount = () => {
         this.setState({
             title: this.props.post.title,
             post: this.props.post.post,
@@ -23,12 +23,17 @@ export class Edit extends Component {
 			[event.target.name]: event.target.value
 		})
     }
+
+    handleSubmit = (e) => {
+        e.preventDefault()
+        this.props.handleUpdate(this.props.post._id, this.state)
+    }
     
 
     render(){
 
         return(
-            <form className="blog-form">
+            <form className="blog-form" onSubmit={this.handleSubmit}>
 				<div className="post-title-author">
 					<div>
 						{' '}
