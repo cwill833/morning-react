@@ -4,25 +4,23 @@ import Nav from './Nav'
 import Footer from './Footer'
 import BlogForm from './BlogForm'
 import Post from './Post'
+import { async } from 'q'
 
 class App extends Component {
 	//this is our state object
 	state = {
 		isShowing: true,
-		posts: [
-			{
-				title: 'My first confetti blog post',
-				content: 'I love confetti!!! I PUT IT EVERYWHERE!!!!',
-				user: 'Murray918'
-			},
-			{
-				title: 'Pandas are fun!',
-				content: 'I dress like one every day!',
-				user: 'cwill833'
-			}
-		]
+		posts: []
 	}
 	// we will define all event logic here
+
+	componentDidMount = async () =>{
+		const results = await fetch('http://localhost:8000/api/posts').then(results=> results.json())
+
+		this.setState({
+			posts: [...results]
+		})
+	}
 	handleShowForm = event => {
 		this.setState({
 			isShowing: !this.state.isShowing
@@ -58,8 +56,8 @@ class App extends Component {
 				<Post
 					key={index}
 					title={item.title}
-					user={item.user}
-					content={item.content}
+					user={item.author}
+					content={item.post}
 					handleDelete={this.handleDelete}
 					id={index}
 				/>
