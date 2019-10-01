@@ -29,7 +29,6 @@ export class Edit extends Component {
 
         return(
             <form className="blog-form">
-				<h1>{this.state.title}</h1>
 				<div className="post-title-author">
 					<div>
 						{' '}

@@ -17,7 +17,6 @@ class BlogForm extends Component {
 
 	handleSubmit = event => {
 		event.preventDefault()
-		console.log('line 20 in BlogPost/index : ', event)
 		this.props.handleAddPost({...this.state}) // this is what actually set the state
 		this.setState({
 			tite:'',
@@ -29,7 +28,6 @@ class BlogForm extends Component {
 	render() {
 		return (
 			<form className="blog-form" onSubmit={this.handleSubmit}>
-				<h1>{this.state.title}</h1>
 				<div className="post-title-author">
 					<div>
 						{' '}
