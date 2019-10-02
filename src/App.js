@@ -17,15 +17,13 @@ class App extends Component {
 	}
 	// we will define all event logic here
 
-	componentDidMount = async () =>{
+	componentDidMount = () =>{
 		 
 		getAll().then(results=>{
 			this.setState({
 				posts: [...results]
 			})
-
 		})
-
 	}
 
 	handleShowForm = () => {
